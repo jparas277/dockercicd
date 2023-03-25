@@ -1,0 +1,39 @@
+version: '3'
+services:
+  vpronginx:
+    image: jparas/web
+    ports:
+      - "80:80"
+
+  vproapp:
+    image: jparas/app
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproappdata:/usr/local/tomcat/webapps
+
+  vprocache01:
+    image: memcached
+    ports:
+      - "11211:11211"
+
+  vpromq01:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  vprodb:
+    image: jparas/db
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=vprodbpass
+
+volumes:
+  vprodbdata: {}
+  vproappdata: {}
